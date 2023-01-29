@@ -33,6 +33,7 @@
 
 #include "lualib.h"
 #include "lauxlib.h"
+#include "bindings/bindings.h"
 
 
 /*
@@ -46,6 +47,12 @@ static const luaL_Reg loadedlibs[] = {
   {LUA_STRLIBNAME, luaopen_string},
   {LUA_MATHLIBNAME, luaopen_math},
   {LUA_UTF8LIBNAME, luaopen_utf8},
+
+  {"gfx", luaopen_graphx},
+  {"kb", luaopen_keypadc},
+  {"ti", luaopen_ti},
+  {"sys", luaopen_sys},
+
   {NULL, NULL}
 };
 
