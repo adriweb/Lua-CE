@@ -11,6 +11,18 @@
 #include <limits.h>
 #include <stddef.h>
 
+#ifdef NDEBUG
+#undef NDEBUG
+#include <debug.h>
+#define NDEBUG
+#else
+#include <debug.h>
+#endif
+#include "shim.h"
+
+#define l_signalT int
+
+#define lua_writestringerror(s, p) dbg_sprintf(dbgerr, (s), (p))
 
 /*
 ** ===================================================================
@@ -41,7 +53,7 @@
 ** Define it if you want Lua to avoid the use of a few C99 features
 ** or Windows-specific features on Windows.
 */
-/* #define LUA_USE_C89 */
+#define LUA_USE_C89
 
 
 /*
@@ -116,7 +128,7 @@
 /*
 @@ LUA_32BITS enables Lua with 32-bit integers and 32-bit floats.
 */
-#define LUA_32BITS	0
+#define LUA_32BITS	1
 
 
 /*

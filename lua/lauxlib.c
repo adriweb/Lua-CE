@@ -794,6 +794,13 @@ LUALIB_API int luaL_loadfilex (lua_State *L, const char *filename,
     lf.f = freopen(filename, "rb", lf.f);  /* reopen in binary mode */
     if (lf.f == NULL) return errfile(L, "reopen", fnameindex);
     skipcomment(&lf, &c);  /* re-read initial portion */
+  } else {
+    for (int i = 0; i < 4; i++) {
+      if (c != "LUAS"[i]) {
+        if (lf.f == NULL) return errfile(L, "signature", fnameindex);
+      }
+      c = getc(lf.f);
+    }
   }
   if (c != EOF)
     lf.buff[lf.n++] = c;  /* 'c' is the first character of the stream */
