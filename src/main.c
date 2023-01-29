@@ -6,9 +6,6 @@
 
 #define lua_c
 
-#include "lprefix.h"
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -567,6 +564,7 @@ static int pmain (lua_State *L) {
     lua_setfield(L, LUA_REGISTRYINDEX, "LUA_NOENV");
   }
   luaL_openlibs(L);  /* open standard libraries */
+  dbg_printf("lua gc mem used after openlibs: %d\n", lua_gc(L, LUA_GCCOUNT));
   // createargtable(L, argv, argc, script);  /* create table 'arg' */
   // dbg_printf("created arg table\n");
   lua_gc(L, LUA_GCGEN, 0, 0);  /* GC in generational mode */
@@ -622,6 +620,8 @@ int main(void) {
         return -1;
     dbg_printf("state created\n");
 
+    dbg_printf("lua gc mem used: %d\n", lua_gc(L, LUA_GCCOUNT));
+
     nio_init(&c1, NIO_MAX_COLS, NIO_MAX_ROWS, 0, 0, NIO_COLOR_BLACK, NIO_COLOR_WHITE, true);
     nio_set_default(&c1);
     nio_printf("Lua-CE built on %s, %s\n\n", __DATE__, __TIME__);
@@ -635,6 +635,7 @@ int main(void) {
     report(L, status);
 
     lua_close(L);
+    dbg_printf("state closed\n");
     nio_free(&c1);
     return 0;
 }

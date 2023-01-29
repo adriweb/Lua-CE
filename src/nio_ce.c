@@ -348,7 +348,7 @@ void nio_scrbuf_free(void)
     gfx_End();
 }
 
-uint8_t getPaletteColorIndex(unsigned int color)
+static uint8_t getPaletteColorIndex(unsigned int color)
 {
     if(color < 16)
     {
@@ -757,7 +757,7 @@ int nio__getche(void)
     return nio_getche(nio_default);
 }
 
-int nio_vram_fputc(int character, nio_console* csl)
+static int nio_vram_fputc(int character, nio_console* csl)
 {
     nio_console_private *c = *csl;
     // Newline. Increment Y cursor, set X cursor to zero. Scroll if necessary.
