@@ -13,9 +13,6 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-#include <sys/types.h>
-#include <sys/queue.h>
-#include <sys/tree.h>
 
 #include <errno.h>
 #include <stdbool.h>
@@ -23,7 +20,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
+
+typedef	char * caddr_t; /* core address */
+#include <sys/queue.h>
+#include <sys/tree.h>
 
 #include <lua.h>
 #include <lauxlib.h>
@@ -261,7 +261,7 @@ luacs_newstruct0(lua_State *L, const char *tname, const char *supertname)
 	memcpy(cs->metaname, metaname, MINIMUM(sizeof(metaname),
 	    sizeof(cs->metaname)));
 
-	cs->typename = index(cs->metaname, '.') + 1;
+	cs->typename = strchr(cs->metaname, '.') + 1;
 	SPLAY_INIT(&cs->fields);
 	TAILQ_INIT(&cs->sorted);
 
@@ -269,8 +269,7 @@ luacs_newstruct0(lua_State *L, const char *tname, const char *supertname)
 	if (supercs != NULL) {
 		TAILQ_FOREACH(fieldf, &supercs->sorted, queue) {
 			if ((fieldt = luacsfield_copy(L, fieldf)) == NULL) {
-				strerror_r(errno, buf, sizeof(buf));
-				lua_pushstring(L, buf);
+				lua_pushstring(L, strerror(errno));
 				lua_error(L);
 				return (0);	/* not reached */
 			}
@@ -341,18 +340,15 @@ luacs_declare(lua_State *L, enum luacstruct_type _type,
 {
 	struct luacstruct_field	*field, *field0;
 	struct luacstruct	*cs;
-	char			 buf[BUFSIZ];
 
 	cs = luacs_checkstruct(L, -1);
 	if ((field = calloc(1, sizeof(struct luacstruct_field))) == NULL) {
-		strerror_r(errno, buf, sizeof(buf));
-		lua_pushstring(L, buf);
+		lua_pushstring(L, strerror(errno));
 		lua_error(L);
 	}
 	if ((field->fieldname = strdup(name)) == NULL) {
 		free(field);
-		strerror_r(errno, buf, sizeof(buf));
-		lua_pushstring(L, buf);
+		lua_pushstring(L, strerror(errno));
 		lua_error(L);
 	}
 	while ((field0 = SPLAY_FIND(luacstruct_fields, &cs->fields, field))
@@ -479,7 +475,7 @@ luacs_pushctype(lua_State *L, enum luacstruct_type _type, const char *tname)
 {
 	char	metaname[METANAMELEN];
 
-	snprintf(metaname, sizeof(metaname), "%s%s", METANAME_LUACTYPE, tname);
+	snprintf(metaname, sizeof(metaname), "%s%s", METANAME_LUACTYPE, tname ? tname : "?");
 	lua_getfield(L, LUA_REGISTRYINDEX, metaname);
 	if (lua_isnil(L, -1)) {
 		if (_type == LUACS_TARRAY)
@@ -501,7 +497,7 @@ luacs_pushctype(lua_State *L, enum luacstruct_type _type, const char *tname)
 }
 
 /* array */
-int
+static int
 luacs_arraytype__gc(lua_State *L)
 {
 	luaL_checkudata(L, -1, METANAME_LUACARRAYTYPE);
@@ -556,7 +552,7 @@ luacs_newarraytype(lua_State *L, const char *tname, enum luacstruct_type _type,
 	memcpy(cat->metaname, metaname, MINIMUM(sizeof(metaname),
 	    sizeof(cat->metaname)));
 
-	cat->typename = index(cat->metaname, '.') + 1;
+	cat->typename = strchr(cat->metaname, '.') + 1;
 	if ((ret = luaL_newmetatable(L, METANAME_LUACARRAYTYPE)) != 0) {
 		lua_pushcfunction(L, luacs_arraytype__gc);
 		lua_setfield(L, -2, "__gc");
@@ -1473,69 +1469,36 @@ int
 luacs_pushregeon(lua_State *L, struct luacobject *obj,
     struct luacregeon *regeon)
 {
-	intmax_t	 ival;
-	uintmax_t	 uval;
-
 	switch (regeon->type) {
 	case LUACS_TINT8:
 		lua_pushinteger(L, *(int8_t *)(obj->ptr + regeon->off));
 		break;
 	case LUACS_TINT16:
-		ival = *(int16_t *)(obj->ptr + regeon->off);
-		if ((regeon->flags & LUACS_FENDIAN) == 0)
-			lua_pushinteger(L, ival);
-		else if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			lua_pushinteger(L, be16toh(ival));
-		else
-			lua_pushinteger(L, le16toh(ival));
+        lua_pushinteger(L, *(int16_t *)(obj->ptr + regeon->off));
 		break;
+    case LUACS_TINT24:
+        lua_pushinteger(L, *(int24_t *)(obj->ptr + regeon->off));
+        break;
 	case LUACS_TINT32:
-		ival = *(int32_t *)(obj->ptr + regeon->off);
-		if ((regeon->flags & LUACS_FENDIAN) == 0)
-			lua_pushinteger(L, ival);
-		else if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			lua_pushinteger(L, be32toh(ival));
-		else
-			lua_pushinteger(L, le32toh(ival));
+        lua_pushinteger(L, *(int32_t *)(obj->ptr + regeon->off));
 		break;
 	case LUACS_TINT64:
-		ival = *(int64_t *)(obj->ptr + regeon->off);
-		if ((regeon->flags & LUACS_FENDIAN) == 0)
-			lua_pushinteger(L, ival);
-		else if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			lua_pushinteger(L, be64toh(ival));
-		else
-			lua_pushinteger(L, le64toh(ival));
+        lua_pushinteger(L, *(int64_t *)(obj->ptr + regeon->off));
 		break;
 	case LUACS_TUINT8:
 		lua_pushinteger(L, *(uint8_t *)(obj->ptr + regeon->off));
 		break;
 	case LUACS_TUINT16:
-		uval = *(uint16_t *)(obj->ptr + regeon->off);
-		if ((regeon->flags & LUACS_FENDIAN) == 0)
-			lua_pushinteger(L, uval);
-		else if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			lua_pushinteger(L, be16toh(uval));
-		else
-			lua_pushinteger(L, le16toh(uval));
+        lua_pushinteger(L, *(uint16_t *)(obj->ptr + regeon->off));
+		break;
+	case LUACS_TUINT24:
+        lua_pushinteger(L, *(uint24_t *)(obj->ptr + regeon->off));
 		break;
 	case LUACS_TUINT32:
-		uval = *(uint32_t *)(obj->ptr + regeon->off);
-		if ((regeon->flags & LUACS_FENDIAN) == 0)
-			lua_pushinteger(L, uval);
-		else if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			lua_pushinteger(L, be32toh(uval));
-		else
-			lua_pushinteger(L, le32toh(uval));
+        lua_pushinteger(L, *(uint32_t *)(obj->ptr + regeon->off));
 		break;
 	case LUACS_TUINT64:
-		uval = *(uint64_t *)(obj->ptr + regeon->off);
-		if ((regeon->flags & LUACS_FENDIAN) == 0)
-			lua_pushinteger(L, uval);
-		else if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			lua_pushinteger(L, be64toh(uval));
-		else
-			lua_pushinteger(L, le64toh(uval));
+        lua_pushinteger(L, *(uint64_t *)(obj->ptr + regeon->off));
 		break;
 	case LUACS_TBOOL:
 		lua_pushboolean(L, *(bool *)(obj->ptr + regeon->off));
@@ -1554,6 +1517,7 @@ luacs_pushregeon(lua_State *L, struct luacobject *obj,
 		switch (regeon->size) {
 		case 1:	value = *(int8_t  *)(obj->ptr + regeon->off); break;
 		case 2:	value = *(int16_t *)(obj->ptr + regeon->off); break;
+		case 3:	value = *(int24_t *)(obj->ptr + regeon->off); break;
 		case 4:	value = *(int32_t *)(obj->ptr + regeon->off); break;
 		case 8:	value = *(int64_t *)(obj->ptr + regeon->off); break;
 		default:
@@ -1588,65 +1552,39 @@ luacs_pullregeon(lua_State *L, struct luacobject *obj,
 {
 	size_t		 siz;
 	int		 absidx;
-	intmax_t	 ival;
-	uintmax_t	 uval;
 
 	absidx = lua_absindex(L, idx);
 
 	switch (regeon->type) {
 	case LUACS_TINT8:
-		*(int8_t *)(obj->ptr + regeon->off) = lua_tointeger(L, absidx);
+		*(int8_t *)(obj->ptr + regeon->off) = (int8_t)lua_tointeger(L, absidx);
 		break;
 	case LUACS_TUINT8:
-		*(uint8_t *)(obj->ptr + regeon->off) = lua_tointeger(L, absidx);
+		*(uint8_t *)(obj->ptr + regeon->off) = (uint8_t)lua_tointeger(L, absidx);
 		break;
 	case LUACS_TINT16:
-		ival = lua_tointeger(L, absidx);
-		if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			ival = htobe16(ival);
-		else if ((regeon->flags & LUACS_FENDIANLITTLE) != 0)
-			ival = htole16(ival);
-		*(int16_t *)(obj->ptr + regeon->off) = ival;
+		*(int16_t *)(obj->ptr + regeon->off) = (int16_t)lua_tointeger(L, absidx);
 		break;
 	case LUACS_TUINT16:
-		uval = lua_tointeger(L, absidx);
-		if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			uval = htobe16(uval);
-		else if ((regeon->flags & LUACS_FENDIANLITTLE) != 0)
-			uval = htole16(uval);
-		*(uint16_t *)(obj->ptr + regeon->off) = uval;
+		*(uint16_t *)(obj->ptr + regeon->off) = (uint16_t)lua_tointeger(L, absidx);
+		break;
+	case LUACS_TINT24:
+		*(int24_t *)(obj->ptr + regeon->off) = (int24_t)lua_tointeger(L, absidx);
+		break;
+	case LUACS_TUINT24:
+		*(uint24_t *)(obj->ptr + regeon->off) = (uint24_t)lua_tointeger(L, absidx);
 		break;
 	case LUACS_TINT32:
-		ival = lua_tointeger(L, absidx);
-		if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			ival = htobe32(ival);
-		else if ((regeon->flags & LUACS_FENDIANLITTLE) != 0)
-			ival = htole32(ival);
-		*(int32_t *)(obj->ptr + regeon->off) = ival;
+		*(int32_t *)(obj->ptr + regeon->off) = (int32_t)lua_tointeger(L, absidx);
 		break;
 	case LUACS_TUINT32:
-		uval = lua_tointeger(L, absidx);
-		if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			uval = htobe32(uval);
-		else if ((regeon->flags & LUACS_FENDIANLITTLE) != 0)
-			uval = htole32(uval);
-		*(uint32_t *)(obj->ptr + regeon->off) = uval;
+		*(uint32_t *)(obj->ptr + regeon->off) = (uint32_t)lua_tointeger(L, absidx);
 		break;
 	case LUACS_TINT64:
-		ival = lua_tointeger(L, absidx);
-		if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			ival = htobe64(ival);
-		else if ((regeon->flags & LUACS_FENDIANLITTLE) != 0)
-			ival = htole64(ival);
-		*(int64_t *)(obj->ptr + regeon->off) = ival;
+		*(int64_t *)(obj->ptr + regeon->off) = (int64_t)lua_tointeger(L, absidx);
 		break;
 	case LUACS_TUINT64:
-		uval = lua_tointeger(L, absidx);
-		if ((regeon->flags & LUACS_FENDIANBIG) != 0)
-			uval = htobe64(uval);
-		else if ((regeon->flags & LUACS_FENDIANLITTLE) != 0)
-			uval = htole64(uval);
-		*(uint64_t *)(obj->ptr + regeon->off) = uval;
+		*(uint64_t *)(obj->ptr + regeon->off) = (uint64_t)lua_tointeger(L, absidx);
 		break;
 	case LUACS_TBOOL:
 		*(bool *)(obj->ptr + regeon->off) = lua_toboolean(L, absidx);
@@ -1690,6 +1628,7 @@ luacs_pullregeon(lua_State *L, struct luacobject *obj,
 		switch (regeon->size) {
 		case 1: *(int8_t  *)(ptr) = value; break;
 		case 2: *(int16_t *)(ptr) = value; break;
+		case 3: *(int24_t *)(ptr) = value; break;
 		case 4: *(int32_t *)(ptr) = value; break;
 		case 8: *(int64_t *)(ptr) = value; break;
 		}
@@ -1740,7 +1679,7 @@ luacs_newenum0(lua_State *L, const char *ename, size_t valwidth)
 	    sizeof(ce->metaname)));
 
 	ce->valwidth = valwidth;
-	ce->enumname = index(ce->metaname, '.') + 1;
+	ce->enumname = strchr(ce->metaname, '.') + 1;
 	SPLAY_INIT(&ce->labels);
 	SPLAY_INIT(&ce->values);
 	if ((ret = luaL_newmetatable(L, METANAME_LUACSENUM)) != 0) {
