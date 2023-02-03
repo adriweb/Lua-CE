@@ -11,10 +11,18 @@
 #include <string.h>
 
 #include "lua.h"
-
 #include "lauxlib.h"
 #include "lualib.h"
 
+#undef NDEBUG
+#include <debug.h>
+#include <ti/getcsc.h>
+#include <ti/screen.h>
+#include <graphx.h>
+
+#define USE_REPL 0
+
+#if USE_REPL
 #include "nio_ce.h"
 
 nio_console c1;
@@ -592,27 +600,20 @@ static int pmain (lua_State *L) {
   return 1;
 }
 
-#undef NDEBUG
-#include <debug.h>
-
-#include <ti/getcsc.h>
-#include <ti/screen.h>
-
-#include "lualib.h"
-#include "lauxlib.h"
+#endif
 
 void outchar(char c) {
+#if USE_REPL
     nio_putchar(c);
+#else
+    snprintf(dbgout, 2, "%c", c);
+#endif
 }
 
 int main(void) {
     os_ClrHome();
     os_SetCursorPos(0, 0);
-
-    const char *argv[] = {
-        LUA_PROGNAME,
-        NULL
-    };
+    os_PutStrFull("Loading Lua-CE...");
 
     dbg_printf("app started\n");
     lua_State *L = luaL_newstate();
@@ -622,20 +623,38 @@ int main(void) {
 
     dbg_printf("lua gc mem used: %d\n", lua_gc(L, LUA_GCCOUNT));
 
+#if USE_REPL
+    const char *lua_argv[] = { LUA_PROGNAME, NULL };
+
     nio_init(&c1, NIO_MAX_COLS, NIO_MAX_ROWS, 0, 0, NIO_COLOR_BLACK, NIO_COLOR_WHITE, true);
     nio_set_default(&c1);
     nio_printf("Lua-CE built on %s, %s\n\n", __DATE__, __TIME__);
 
     lua_pushcfunction(L, &pmain);  /* to call 'pmain' in protected mode */
     lua_pushinteger(L, 0);  /* 1st argument */
-    lua_pushlightuserdata(L, argv); /* 2nd argument */
+    lua_pushlightuserdata(L, lua_argv); /* 2nd argument */
     int status = lua_pcall(L, 2, 1, 0);  /* do the call */
     int result = lua_toboolean(L, -1);  /* get result */
     dbg_printf("status %u result %u\n", status, result);
     report(L, status);
+#else
+    luaL_openlibs(L);
+    dbg_printf("lua gc mem used after openlibs: %d\n", lua_gc(L, LUA_GCCOUNT));
+
+    lua_gc(L, LUA_GCGEN, 0, 0);
+
+    if (luaL_dofile(L, "LuaTEST") != LUA_OK) {
+        dbg_printf("Error: %s\n", lua_tostring(L, -1));
+        lua_pop(L, 1); // pop error message
+    }
+#endif
 
     lua_close(L);
     dbg_printf("state closed\n");
+#if USE_REPL
     nio_free(&c1);
+#else
+    gfx_End(); // just in case
+#endif
     return 0;
 }
