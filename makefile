@@ -29,13 +29,10 @@ LUA_CORE = \
 LUA_LIBRARIES = \
 	lua/lbaselib.c \
 	lua/lcorolib.c \
-	lua/ldblib.c \
+	lua/lutf8lib.c \
 	lua/lmathlib.c \
 	lua/lstrlib.c \
 	lua/ltablib.c
-
-# 	lua/liolib.c \
-	lua/loslib.c \
 
 SRCDIR = src
 EXTRA_C_SOURCES = $(LUA_CORE) lua/lauxlib.c $(LUA_LIBRARIES)

@@ -45,7 +45,7 @@ static const luaL_Reg loadedlibs[] = {
   {LUA_TABLIBNAME, luaopen_table},
   {LUA_STRLIBNAME, luaopen_string},
   {LUA_MATHLIBNAME, luaopen_math},
-  {LUA_DBLIBNAME, luaopen_debug},
+  {LUA_UTF8LIBNAME, luaopen_utf8},
   {NULL, NULL}
 };
 
