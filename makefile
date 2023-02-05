@@ -1,8 +1,10 @@
+# originally based on commandblockguy's lua port + app tools
+
 NAME = LUA
-APP_NAME = Lua
+APP_NAME = LuaNsp
 APP_VERSION = 5.0.0.0000
 APP_INST_NAME = LUAINST
-DESCRIPTION = Lua port by commandblockguy
+DESCRIPTION = Nspire Lua on the CE
 
 LUA_CORE = \
 	lua/lzio.c \
