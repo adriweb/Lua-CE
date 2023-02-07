@@ -483,16 +483,16 @@ static const luaL_Reg graphxlib[] = {
     {"finish", finish},
 
     {"setTextConfig", setTextConfig},
-    {"getCharWidth", getCharWidth},
+//    {"getCharWidth", getCharWidth},
     {"getStringWidth", getStringWidth},
     {"getStringHeight", getStringHeight},
-    {"printInt", printInt},
-    {"printUInt", printUInt},
-    {"printChar", printChar},
-    {"printString", printString},
+//    {"printInt", printInt},
+//    {"printUInt", printUInt},
+//    {"printChar", printChar},
+//    {"printString", printString},
     {"printStringXY", printStringXY},
-    {"getTextXY", getTextXY},
-    {"setTextXY", setTextXY},
+//    {"getTextXY", getTextXY},
+//    {"setTextXY", setTextXY},
     {"setTextScale", setTextScale},
     {"setMonospaceFont", setMonospaceFont},
     {"setFontHeight", setFontHeight},
@@ -500,9 +500,9 @@ static const luaL_Reg graphxlib[] = {
     {"setColor", setColor},
     {"setColorRGB", setColorRGB},
     {"rgb888toPaletteIdx", binding_rgb888toPaletteIdx},
-    {"setTransparentColor", setTransparentColor},
-    {"setTextTransparentColor", setTextTransparentColor},
-    {"setDefaultPalette", setDefaultPalette},
+//    {"setTransparentColor", setTransparentColor},
+//    {"setTextTransparentColor", setTextTransparentColor},
+//    {"setDefaultPalette", setDefaultPalette},
     {"setTextFGColor", setTextFGColor},
     {"setTextBGColor", setTextBGColor},
     {"RGBTo1555", RGBTo1555},
@@ -518,43 +518,43 @@ static const luaL_Reg graphxlib[] = {
     {"fillRect", fillRect},
     {"drawCircle", drawCircle},
     {"fillCircle", fillCircle},
-    {"drawEllipse", drawEllipse},
-    {"fillEllipse", fillEllipse},
+//    {"drawEllipse", drawEllipse},
+//    {"fillEllipse", fillEllipse},
     {"drawPolyLine", drawPolyLine},
-    {"drawTriangle", drawTriangle},
-    {"fillTriangle", fillTriangle},
+//    {"drawTriangle", drawTriangle},
+//    {"fillTriangle", fillTriangle},
 
-    {"setDrawBuffer", setDrawBuffer},
-    {"setDrawScreen", setDrawScreen},
-    {"blitScreen", blitScreen},
-    {"blitBuffer", blitBuffer},
-    {"blitLines", blitLines},
-    {"blitRectangle", blitRectangle},
-    {"copyRectangle", copyRectangle},
+//    {"setDrawBuffer", setDrawBuffer},
+//    {"setDrawScreen", setDrawScreen},
+//    {"blitScreen", blitScreen},
+//    {"blitBuffer", blitBuffer},
+//    {"blitLines", blitLines},
+//    {"blitRectangle", blitRectangle},
+//    {"copyRectangle", copyRectangle},
 
     {"getClipRegion", getClipRegion},
     {"setClipRegion", setClipRegion},
 
-    {"checkRectsIntersect", checkRectsIntersect},
-
-    {"shiftDown", shiftDown},
-    {"shiftUp", shiftUp},
-    {"shiftLeft", shiftLeft},
-    {"shiftRight", shiftRight},
+//    {"checkRectsIntersect", checkRectsIntersect},
+//
+//    {"shiftDown", shiftDown},
+//    {"shiftUp", shiftUp},
+//    {"shiftLeft", shiftLeft},
+//    {"shiftRight", shiftRight},
 
     {"fillScreen", fillScreen},
-    {"zeroScreen", zeroScreen},
-    {"floodFill", floodFill},
+//    {"zeroScreen", zeroScreen},
+//    {"floodFill", floodFill},
 
-    {"Sprite", sprite_new},
-    //{"RLETSprite", rletsprite_new},
+//    {"Sprite", sprite_new},
+//    //{"RLETSprite", rletsprite_new},
 
     {NULL, NULL}
 };
 
 LUALIB_API int luaopen_graphx(lua_State *L) {
     // register structs
-    bindStructs(L);
+//    bindStructs(L);
 
     // add the lib
     luaL_newlib(L, graphxlib);
@@ -563,13 +563,13 @@ LUALIB_API int luaopen_graphx(lua_State *L) {
     lua_pushinteger(L, GFX_LCD_WIDTH);  lua_setfield(L, -2, "LCD_WIDTH");
     lua_pushinteger(L, GFX_LCD_HEIGHT); lua_setfield(L, -2, "LCD_HEIGHT");
     lua_pushinteger(L, 0); lua_setfield(L, -2, "colorBlack");
-    lua_pushinteger(L, 1); lua_setfield(L, -2, "colorRed");
-    lua_pushinteger(L, 2); lua_setfield(L, -2, "colorOrange");
-    lua_pushinteger(L, 3); lua_setfield(L, -2, "colorGreen");
-    lua_pushinteger(L, 4); lua_setfield(L, -2, "colorBlue");
-    lua_pushinteger(L, 5); lua_setfield(L, -2, "colorPurple");
-    lua_pushinteger(L, 6); lua_setfield(L, -2, "colorYellow");
-    lua_pushinteger(L, 7); lua_setfield(L, -2, "colorPink");
+//    lua_pushinteger(L, 1); lua_setfield(L, -2, "colorRed");
+//    lua_pushinteger(L, 2); lua_setfield(L, -2, "colorOrange");
+//    lua_pushinteger(L, 3); lua_setfield(L, -2, "colorGreen");
+//    lua_pushinteger(L, 4); lua_setfield(L, -2, "colorBlue");
+//    lua_pushinteger(L, 5); lua_setfield(L, -2, "colorPurple");
+//    lua_pushinteger(L, 6); lua_setfield(L, -2, "colorYellow");
+//    lua_pushinteger(L, 7); lua_setfield(L, -2, "colorPink");
     lua_pushinteger(L, 255); lua_setfield(L, -2, "colorWhite");
 
     return 1;
