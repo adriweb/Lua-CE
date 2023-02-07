@@ -42,14 +42,14 @@
 */
 static const luaL_Reg loadedlibs[] = {
   {LUA_GNAME, luaopen_base},
-  {LUA_COLIBNAME, luaopen_coroutine},
+//  {LUA_COLIBNAME, luaopen_coroutine},
   {LUA_TABLIBNAME, luaopen_table},
   {LUA_STRLIBNAME, luaopen_string},
   {LUA_MATHLIBNAME, luaopen_math},
   {LUA_UTF8LIBNAME, luaopen_utf8},
 
   {"gfx", luaopen_graphx},
-  {"kb", luaopen_keypadc},
+//  {"kb", luaopen_keypadc},
   {"ti", luaopen_ti},
   {"sys", luaopen_sys},
 

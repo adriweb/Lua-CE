@@ -129,13 +129,13 @@ static int timerHasExpired(lua_State *L) {
 
 static const luaL_Reg syslib[] = {
     /* sys/basicusb.h */
-    {"usbBusPowered", usbBusPowered},
-    {"usbSelfPowered", usbSelfPowered},
-
-    /* sys/power.h */
-    {"toggleAPD", toggleAPD},
-    {"isBatteryCharging", isBatteryCharging},
-    {"getBatteryStatus", getBatteryStatus},
+//    {"usbBusPowered", usbBusPowered},
+//    {"usbSelfPowered", usbSelfPowered},
+//
+//    /* sys/power.h */
+//    {"toggleAPD", toggleAPD},
+//    {"isBatteryCharging", isBatteryCharging},
+//    {"getBatteryStatus", getBatteryStatus},
 
     /* sys/timers.h */
     {"waitShort", binding_waitShort},
@@ -143,10 +143,10 @@ static const luaL_Reg syslib[] = {
     {"delay", binding_msleep}, // alias
 
     /* sys/rtc.h */
-    {"setDate", setDate},
-    {"getDate", getDate},
-    {"setTime", setTime},
-    {"getTime", getTime},
+//    {"setDate", setDate},
+//    {"getDate", getDate},
+//    {"setTime", setTime},
+//    {"getTime", getTime},
 
     {"clock", binding_clock},
     {"getMsCounter", binding_getMsCounter},

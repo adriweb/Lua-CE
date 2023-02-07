@@ -314,55 +314,55 @@ static int evalVar(lua_State *L) {
 
 static const luaL_Reg tilib[] = {
     /* ti/getcsc.h */
-    {"checkOnPressed", checkOnPressed},
+//    {"checkOnPressed", checkOnPressed},
     {"getCSC", getCSC},
     {"waitKey", waitKey},
 
     /* ti/getkey.h */
-    {"getKey", getKey},
+//    {"getKey", getKey},
 
     /* ti/info.h */
-    {"getBootMajorVer", getBootMajorVer},
-    {"getBootMinorVer", getBootMinorVer},
-    {"getHardwareVer", getHardwareVer},
+//    {"getBootMajorVer", getBootMajorVer},
+//    {"getBootMinorVer", getBootMinorVer},
+//    {"getHardwareVer", getHardwareVer},
     {"getCalcID", getCalcID},
     {"getLangID", getLangID},
     {"getHwType", getHwType},
 
     /* ti/ui.h */
-    {"clearVRAM", clearVRAM},
-    {"toggleRunIndicator", toggleRunIndicator},
-    {"drawStatusBar", drawStatusBar},
-    {"getBrightness", getBrightness},
-    {"setBrightness", setBrightness},
+//    {"clearVRAM", clearVRAM},
+//    {"toggleRunIndicator", toggleRunIndicator},
+//    {"drawStatusBar", drawStatusBar},
+//    {"getBrightness", getBrightness},
+//    {"setBrightness", setBrightness},
 
     /* ti/real.h */
-    {"Real", real_new},
+//    {"Real", real_new},
 
     /* ti/screen.h */
-    {"toggleCursor", toggleCursor},
-    {"newLine", newLine},
+//    {"toggleCursor", toggleCursor},
+//    {"newLine", newLine},
     {"clrHome", clrHome},
     {"clrHomeFull", clrHomeFull},
-    {"getCursorPos", getCursorPos},
-    {"setCursorPos", setCursorPos},
-    {"putStrFull", putStrFull},
-    {"putStrLine", putStrLine},
-    {"stringInput", stringInput},
-    {"getStringDimension", getStringDimension},
-    {"fontSelect", fontSelect},
-    {"setPenFont", fontSelect},
-    {"getPenPos", getPenPos},
-    {"setPenPos", setPenPos},
-    {"getDrawBGColor", getDrawBGColor},
-    {"setDrawBGColor", setDrawBGColor},
-    {"getDrawFGColor", getDrawFGColor},
-    {"setDrawFGColor", setDrawFGColor},
-    {"fontDrawText", fontDrawText},
-    {"fontDrawTranspText", fontDrawTranspText},
+//    {"getCursorPos", getCursorPos},
+//    {"setCursorPos", setCursorPos},
+//    {"putStrFull", putStrFull},
+//    {"putStrLine", putStrLine},
+//    {"stringInput", stringInput},
+//    {"getStringDimension", getStringDimension},
+//    {"fontSelect", fontSelect},
+//    {"setPenFont", fontSelect},
+//    {"getPenPos", getPenPos},
+//    {"setPenPos", setPenPos},
+//    {"getDrawBGColor", getDrawBGColor},
+//    {"setDrawBGColor", setDrawBGColor},
+//    {"getDrawFGColor", getDrawFGColor},
+//    {"setDrawFGColor", setDrawFGColor},
+//    {"fontDrawText", fontDrawText},
+//    {"fontDrawTranspText", fontDrawTranspText},
 
     /* ti/vars.h */
-    {"getAns", getAns},
+//    {"getAns", getAns},
     {"eval", eval},
     {"evalVar", evalVar},
 
@@ -371,7 +371,7 @@ static const luaL_Reg tilib[] = {
 
 LUALIB_API int luaopen_ti(lua_State *L) {
     // register structs
-    bindStructs(L);
+//    bindStructs(L);
 
     // add the lib
     luaL_newlib(L, tilib);
