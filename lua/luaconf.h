@@ -24,6 +24,8 @@
 
 #define lua_writestringerror(s, p) dbg_sprintf(dbgerr, (s), (p))
 
+#define LUA_COMPAT_5_3
+
 /*
 ** ===================================================================
 ** General Configuration File for Lua
