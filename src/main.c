@@ -355,27 +355,27 @@ static int handle_luainit (lua_State *L) {
 
 
 /*
-** lua_stdin_is_tty detects whether the standard input is a 'tty' (that
+** luastdinis_tty detects whether the standard input is a 'tty' (that
 ** is, whether we're running lua interactively).
 */
-#if !defined(lua_stdin_is_tty)  /* { */
+#if !defined(luastdinis_tty)  /* { */
 
 #if defined(LUA_USE_POSIX)  /* { */
 
 #include <unistd.h>
-#define lua_stdin_is_tty()  isatty(0)
+#define luastdinis_tty()  isatty(0)
 
 #elif defined(LUA_USE_WINDOWS)  /* }{ */
 
 #include <io.h>
 #include <windows.h>
 
-#define lua_stdin_is_tty()  _isatty(_fileno(stdin))
+#define luastdinis_tty()  _isatty(_fileno(stdin))
 
 #else               /* }{ */
 
 /* ISO C definition */
-#define lua_stdin_is_tty()  1  /* assume stdin is a tty */
+#define luastdinis_tty()  1  /* assume stdin is a tty */
 
 #endif              /* } */
 

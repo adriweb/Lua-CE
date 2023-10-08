@@ -231,7 +231,7 @@ LUA_API const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n) {
     name = luaG_findlocal(L, ar->i_ci, n, &pos);
     if (name) {
       setobjs2s(L, L->top.p, pos);
-      api_incr_top(L);
+      apiincr_top(L);
     }
   }
   lua_unlock(L);
@@ -290,7 +290,7 @@ static int nextline (const Proto *p, int currentline, int pc) {
 static void collectvalidlines (lua_State *L, Closure *f) {
   if (noLuaClosure(f)) {
     setnilvalue(s2v(L->top.p));
-    api_incr_top(L);
+    apiincr_top(L);
   }
   else {
     int i;
@@ -299,7 +299,7 @@ static void collectvalidlines (lua_State *L, Closure *f) {
     int currentline = p->linedefined;
     Table *t = luaH_new(L);  /* new table to store active lines */
     sethvalue2s(L, L->top.p, t);  /* push it on stack */
-    api_incr_top(L);
+    apiincr_top(L);
     setbtvalue(&v);  /* boolean 'true' to be the value of all indices */
     if (!p->is_vararg)  /* regular function? */
       i = 0;  /* consider all instructions */
@@ -402,7 +402,7 @@ LUA_API int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
   status = auxgetinfo(L, what, ar, cl, ci);
   if (strchr(what, 'f')) {
     setobj2s(L, L->top.p, func);
-    api_incr_top(L);
+    apiincr_top(L);
   }
   if (strchr(what, 'L'))
     collectvalidlines(L, cl);

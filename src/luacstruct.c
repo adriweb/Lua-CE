@@ -182,7 +182,7 @@ static int	 luacs_object__luacstructdump(struct lua_State *);
 struct luacobj_compat;
 static void	 luacs_object_compat(lua_State *, int, struct luacobj_compat *);
 static int	 luacs_object__eq(lua_State *);
-static int	 luacs_object__tostring(lua_State *);
+static int	 luacsobject__tostring(lua_State *);
 static int	 luacs_object__index(lua_State *);
 static int	 luacs_object__get(lua_State *, struct luacobject *,
 		    struct luacstruct_field *);
@@ -204,9 +204,9 @@ static int	 luacs_enum__index(lua_State *);
 static int	 luacs_enum__pairs(lua_State *);
 static int	 luacs_enum__next(lua_State *);
 static int	 luacs_enum__gc(lua_State *);
-static int	 luacs_enumvalue_tointeger(lua_State *);
+static int	 luacsenumvalue_tointeger(lua_State *);
 static int	 luacs_enumvalue_label(lua_State *);
-static int	 luacs_enumvalue__tostring(lua_State *);
+static int	 luacsenumvalue__tostring(lua_State *);
 static int	 luacs_enumvalue__gc(lua_State *);
 static int	 luacs_enumvalue__eq(lua_State *);
 static int	 luacs_enumvalue__lt(lua_State *);
@@ -1036,7 +1036,7 @@ luacs_newobject0(lua_State *L, void *ptr)
 		lua_setfield(L, -2, "__pairs");
 		lua_pushcfunction(L, luacs_object__gc);
 		lua_setfield(L, -2, "__gc");
-		lua_pushcfunction(L, luacs_object__tostring);
+		lua_pushcfunction(L, luacsobject__tostring);
 		lua_setfield(L, -2, "__tostring");
 		lua_pushcfunction(L, luacs_object__eq);
 		lua_setfield(L, -2, "__eq");
@@ -1138,7 +1138,7 @@ luacs_object__eq(lua_State *L)
 }
 
 int
-luacs_object__tostring(lua_State *L)
+luacsobject__tostring(lua_State *L)
 {
 	struct luacobject	*obj;
 	char			 buf[BUFSIZ];
@@ -1160,7 +1160,7 @@ luacs_object__tostring(lua_State *L)
 }
 
 int
-luacs_object_typename(lua_State *L)
+luacsobject_typename(lua_State *L)
 {
 	struct luacobj_compat	 compat;
 
@@ -1895,9 +1895,9 @@ luacs_enum_declare_value(lua_State *L, const char *label, intmax_t value)
 		lua_setfield(L, -2, "__lt");
 		lua_pushcfunction(L, luacs_enumvalue__eq);
 		lua_setfield(L, -2, "__eq");
-		lua_pushcfunction(L, luacs_enumvalue__tostring);
+		lua_pushcfunction(L, luacsenumvalue__tostring);
 		lua_setfield(L, -2, "__tostring");
-		lua_pushcfunction(L, luacs_enumvalue_tointeger);
+		lua_pushcfunction(L, luacsenumvalue_tointeger);
 		lua_setfield(L, -2, "tointeger");
 		lua_pushcfunction(L, luacs_enumvalue_label);
 		lua_setfield(L, -2, "label");
@@ -1911,7 +1911,7 @@ luacs_enum_declare_value(lua_State *L, const char *label, intmax_t value)
 }
 
 int
-luacs_enumvalue_tointeger(lua_State *L)
+luacsenumvalue_tointeger(lua_State *L)
 {
 	struct luacenum_value	*val;
 
@@ -1935,7 +1935,7 @@ luacs_enumvalue_label(lua_State *L)
 }
 
 int
-luacs_enumvalue__tostring(lua_State *L)
+luacsenumvalue__tostring(lua_State *L)
 {
 	struct luacenum_value	*val;
 	char			 buf[128];

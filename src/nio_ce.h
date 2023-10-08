@@ -143,7 +143,7 @@ void queue_put(queue* q, char val);
 	@param q Queue
 	@return the value
 */
-char queue_get_top(queue* q);
+char queueget_top(queue* q);
 
 /** Get value from the beginning of the queue.
 	@param q Queue
@@ -210,7 +210,7 @@ typedef struct
     unsigned char cursor_custom_data[6];
     bool cursor_blink_enabled;
     bool cursor_blink_status;
-    unsigned cursor_blink_timestamp;
+    unsigned cursorblink_timestamp;
     unsigned cursor_blink_duration;
     int (*idle_callback)(void*);
     void* idle_callback_data;
@@ -511,7 +511,7 @@ void nio_cursor_blinking_duration(nio_console* c, int duration);
 
 	You may also use the predefined types as arguments. (NIO_CURSOR_*)
 */
-void nio_cursor_type(nio_console* c, int cursor_type);
+void niocursor_type(nio_console* c, int cursor_type);
 
 /** Sets the console cursor width.
 	@param c Console

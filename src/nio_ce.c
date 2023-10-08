@@ -978,7 +978,7 @@ int nio_read(nio_console *csl, char* str, int num)
                 }
                 else
                     nio_fputs("\b \b", csl);
-                queue_get_top(c->input_buf);
+                queueget_top(c->input_buf);
                 i--;
             }
         }
@@ -1002,7 +1002,7 @@ int nio_read(nio_console *csl, char* str, int num)
                     } else {
                         nio_fputs("\b \b", csl);
                     }
-                    queue_get_top(c->input_buf);
+                    queueget_top(c->input_buf);
                 }
                 ++i;
 
@@ -1242,16 +1242,16 @@ void nio_cursor_blinking_draw(nio_console* csl)
 {
     nio_console_private *c = *csl;
     if (!c->cursor_blink_enabled) return;
-    if (c->cursor_blink_timestamp == 0) c->cursor_blink_timestamp = nio_cursor_clock();
+    if (c->cursorblink_timestamp == 0) c->cursorblink_timestamp = nio_cursor_clock();
     if (c->cursor_blink_duration == 0) c->cursor_blink_duration = 1;
 
-    if ((nio_cursor_clock() - c->cursor_blink_timestamp) >= c->cursor_blink_duration) {
+    if ((nio_cursor_clock() - c->cursorblink_timestamp) >= c->cursor_blink_duration) {
         if (c->cursor_blink_status)
             nio_cursor_draw(csl);
         else
             nio_cursor_erase(csl);
         c->cursor_blink_status = !c->cursor_blink_status;
-        c->cursor_blink_timestamp = nio_cursor_clock();
+        c->cursorblink_timestamp = nio_cursor_clock();
     }
 }
 
@@ -1259,7 +1259,7 @@ void nio_cursor_blinking_reset(nio_console* csl)
 {
     nio_console_private *c = *csl;
     if (!c->cursor_blink_enabled) return;
-    c->cursor_blink_timestamp = nio_cursor_clock();
+    c->cursorblink_timestamp = nio_cursor_clock();
 }
 
 void nio_cursor_enable(nio_console* csl, bool enable_cursor)
@@ -1285,7 +1285,7 @@ void nio_cursor_blinking_duration(nio_console* csl, int duration)
     c->cursor_blink_duration = (unsigned) duration;
 }
 
-void nio_cursor_type(nio_console* csl, int cursor_type)
+void niocursor_type(nio_console* csl, int cursor_type)
 {
     nio_console_private *c = *csl;
     if (!((c->cursor_type >= 0) && (c->cursor_type <= 4))) {
@@ -1336,7 +1336,7 @@ void queue_put(queue* q, char val)
     }
 }
 
-char queue_get_top(queue* q)
+char queueget_top(queue* q)
 {
     char val;
 

@@ -13,7 +13,7 @@
 
 
 /* Increments 'L->top.p', checking for stack overflows */
-#define api_incr_top(L)	{L->top.p++; \
+#define apiincr_top(L)	{L->top.p++; \
 			 api_check(L, L->top.p <= L->ci->top.p, \
 					"stack overflow");}
 

@@ -17,8 +17,8 @@
 static const system_info_t* system_info = NULL;
 
 static int real_new(lua_State* L) {
-    struct _real_t* real = calloc(1, sizeof(struct _real_t));
-    luacs_newobject(L, "_real_t", real);
+    struct real_t* real = calloc(1, sizeof(struct real_t));
+    luacs_newobject(L, "real_t", real);
     if (lua_isnumber(L, 1)) {
         if (lua_isinteger(L, 1) && luaL_checkinteger(L, 1) >= INT24_MIN && luaL_checkinteger(L, 1) <= INT24_MAX) {
             *real = os_Int24ToReal((int24_t)luaL_checkinteger(L, 1));
@@ -36,7 +36,7 @@ static int real_new(lua_State* L) {
 static int real__tostring(lua_State *L)
 {
     char buf[15];
-    struct _real_t* real = luacs_checkobject(L, 1, "_real_t");
+    struct real_t* real = luacs_checkobject(L, 1, "real_t");
     os_RealToStr(buf, real, 0, 1, -1);
     lua_pushstring(L, buf);
     return 1;
@@ -44,14 +44,14 @@ static int real__tostring(lua_State *L)
 
 static int real_toNumber(lua_State *L)
 {
-    struct _real_t* real = luacs_checkobject(L, 1, "_real_t");
+    struct real_t* real = luacs_checkobject(L, 1, "real_t");
     lua_pushnumber(L, os_RealToFloat(real));
     return 1;
 }
 static int real_toString(lua_State *L)
 {
     char buf[15];
-    struct _real_t* real = luacs_checkobject(L, 1, "_real_t");
+    struct real_t* real = luacs_checkobject(L, 1, "real_t");
     const lua_Integer maxlen = luaL_optinteger(L, 2, 0);
     const lua_Integer mode = luaL_optinteger(L, 3, 1);
     const lua_Integer digits = luaL_optinteger(L, 4, -1);
@@ -65,24 +65,24 @@ static int real_toString(lua_State *L)
 
 static int real__gc(lua_State *L)
 {
-    free((struct _real_t*)luacs_checkobject(L, 1, "_real_t"));
+    free((struct real_t*)luacs_checkobject(L, 1, "real_t"));
     return 0;
 }
 
 static void bindStructs(lua_State *L) {
-    luacs_newstruct(L, _real_t);
-    luacs_int_field(L, _real_t, sign, 0);
-    luacs_unsigned_field(L, _real_t, exp, 0);
-    luacs_unsigned_array_field(L, _real_t, mant, 0);
+    luacs_newstruct(L, real_t);
+    luacs_int_field(L, real_t, sign, 0);
+    luacs_unsigned_field(L, real_t, exp, 0);
+    luacs_unsigned_array_field(L, real_t, mant, 0);
     luacs_declare_method(L, "toNumber", real_toNumber);
     luacs_declare_method(L, "toString", real_toString);
     luacs_declare_method(L, "__tostring", real__tostring);
     luacs_declare_method(L, "__gc", real__gc);
     lua_pop(L, 1);
 
-    luacs_newstruct(L, _cplx_t);
-    luacs_nested_field(L, _cplx_t, _real_t, real, 0);
-    luacs_nested_field(L, _cplx_t, _real_t, imag, 0);
+    luacs_newstruct(L, cplx_t);
+    luacs_nested_field(L, cplx_t, real_t, real, 0);
+    luacs_nested_field(L, cplx_t, real_t, imag, 0);
     lua_pop(L, 1);
 }
 

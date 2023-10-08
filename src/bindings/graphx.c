@@ -17,16 +17,16 @@ static int sprite_new(lua_State* L) {
     luaL_argcheck(L, width > 0 && width <= 0xFF, 1, "width out of [1-255] range");
     luaL_argcheck(L, height > 0 && height <= 0xFF, 1, "height out of [1-255] range");
     lua_gc(L, LUA_GCCOLLECT);
-    struct _gfx_sprite_t* sprite = gfx_MallocSprite(width, height);
-    luacs_newobject(L, "_gfx_sprite_t", sprite);
+    struct gfx_sprite_t* sprite = gfx_MallocSprite(width, height);
+    luacs_newobject(L, "gfx_sprite_t", sprite);
     return 1;
 }
 static int sprite__gc(lua_State *L) {
-    free((struct _gfx_sprite_t*)luacs_checkobject(L, 1, "_gfx_sprite_t"));
+    free((struct gfx_sprite_t*)luacs_checkobject(L, 1, "gfx_sprite_t"));
     return 0;
 }
 static int sprite_draw(lua_State *L) {
-    const struct _gfx_sprite_t* sprite = luacs_checkobject(L, 1, "_gfx_sprite_t");
+    const struct gfx_sprite_t* sprite = luacs_checkobject(L, 1, "gfx_sprite_t");
     const lua_Integer x = luaL_checkinteger(L, 2);
     const lua_Integer y = luaL_checkinteger(L, 3);
     const bool transp =  lua_toboolean(L, 4);
@@ -34,7 +34,7 @@ static int sprite_draw(lua_State *L) {
     return 0;
 }
 static int sprite_drawClipped(lua_State *L) {
-    const struct _gfx_sprite_t* sprite = luacs_checkobject(L, 1, "_gfx_sprite_t");
+    const struct gfx_sprite_t* sprite = luacs_checkobject(L, 1, "gfx_sprite_t");
     const lua_Integer x = luaL_checkinteger(L, 2);
     const lua_Integer y = luaL_checkinteger(L, 3);
     const bool transp =  lua_toboolean(L, 4);
@@ -42,7 +42,7 @@ static int sprite_drawClipped(lua_State *L) {
     return 0;
 }
 static int sprite_drawScaled(lua_State *L) {
-    const struct _gfx_sprite_t* sprite = luacs_checkobject(L, 1, "_gfx_sprite_t");
+    const struct gfx_sprite_t* sprite = luacs_checkobject(L, 1, "gfx_sprite_t");
     const lua_Integer x = luaL_checkinteger(L, 2);
     const lua_Integer y = luaL_checkinteger(L, 3);
     const uint8_t xScl = luaL_checkinteger(L, 4);
@@ -52,7 +52,7 @@ static int sprite_drawScaled(lua_State *L) {
     return 0;
 }
 static int sprite_drawRotated(lua_State *L) {
-    const struct _gfx_sprite_t* sprite = luacs_checkobject(L, 1, "_gfx_sprite_t");
+    const struct gfx_sprite_t* sprite = luacs_checkobject(L, 1, "gfx_sprite_t");
     const lua_Integer x = luaL_checkinteger(L, 2);
     const lua_Integer y = luaL_checkinteger(L, 3);
     const uint8_t angle = luaL_checkinteger(L, 4);
@@ -61,7 +61,7 @@ static int sprite_drawRotated(lua_State *L) {
     return 0;
 }
 static int sprite_drawRotatedScaled(lua_State *L) {
-    const struct _gfx_sprite_t* sprite = luacs_checkobject(L, 1, "_gfx_sprite_t");
+    const struct gfx_sprite_t* sprite = luacs_checkobject(L, 1, "gfx_sprite_t");
     const lua_Integer x = luaL_checkinteger(L, 2);
     const lua_Integer y = luaL_checkinteger(L, 3);
     const uint8_t angle = luaL_checkinteger(L, 4);
@@ -72,9 +72,9 @@ static int sprite_drawRotatedScaled(lua_State *L) {
 }
 
 static void bindStructs(lua_State *L) {
-    luacs_newstruct(L, _gfx_sprite_t);
-    luacs_unsigned_field(L, _gfx_sprite_t, width, LUACS_FREADONLY);
-    luacs_unsigned_field(L, _gfx_sprite_t, height, LUACS_FREADONLY);
+    luacs_newstruct(L, gfx_sprite_t);
+    luacs_unsigned_field(L, gfx_sprite_t, width, LUACS_FREADONLY);
+    luacs_unsigned_field(L, gfx_sprite_t, height, LUACS_FREADONLY);
     luacs_declare_method(L, "__gc", sprite__gc);
     luacs_declare_method(L, "draw", sprite_draw);
     luacs_declare_method(L, "drawClipped", sprite_drawClipped);

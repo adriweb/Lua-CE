@@ -128,7 +128,7 @@ struct lua_longjmp;  /* defined in ldo.c */
 */
 #if !defined(l_signalT)
 #include <signal.h>
-#define l_signalT	sig_atomic_t
+#define l_signalT	sigatomic_t
 #endif
 
 

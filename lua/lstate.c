@@ -294,7 +294,7 @@ LUA_API lua_State *lua_newthread (lua_State *L) {
   L1 = gco2th(o);
   /* anchor it on L stack */
   setthvalue2s(L, L->top.p, L1);
-  api_incr_top(L);
+  apiincr_top(L);
   preinit_thread(L1, g);
   L1->hookmask = L->hookmask;
   L1->basehookcount = L->basehookcount;
